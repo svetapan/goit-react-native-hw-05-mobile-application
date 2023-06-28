@@ -58,10 +58,14 @@ const CreatePostsScreen = ({ navigation }) => {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      await MediaLibrary.requestPermissionsAsync();
-
-      setHasPermission(status === "granted");
+      try {
+        const { status } = await Camera.requestPermissionsAsync();
+        await MediaLibrary.requestPermissionsAsync();
+  
+        setHasPermission(status === "granted");
+      } catch (error) {
+        console.log("Error requesting permissions:", error);
+      }
     })();
   }, []);
 
@@ -77,7 +81,6 @@ const CreatePostsScreen = ({ navigation }) => {
       const { uri } = await cameraRef.takePictureAsync();
       await MediaLibrary.createAssetAsync(uri);
 
-      // Get geolocation
       const { status } = await Location.requestPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission to access location was denied");

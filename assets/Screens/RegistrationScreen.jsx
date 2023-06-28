@@ -8,7 +8,6 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Platform,
   TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState, useEffect } from "react";
@@ -20,15 +19,11 @@ const RegistrationScreen = ({ navigation }) => {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [isLoginEntered, setIsLoginEntered] = useState(false);
-  const [isEmailEntered, setIsEmailEntered] = useState(false);
-  const [isPasswordEntered, setIsPasswordEntered] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
-    setIsFormValid(login !== "" && isEmailEntered && isPasswordEntered);
-  }, [login, isEmailEntered, isPasswordEntered]);
+    setIsFormValid(login !== "" && email && password);
+  }, [login, email, password]);
 
   const addImage = (e) => {
     e.preventDefault();
@@ -61,12 +56,10 @@ const RegistrationScreen = ({ navigation }) => {
         <ImageBackground
           source={require("../images/bg-app.jpg")}
           style={styles.imageBackground}
-          imageStyle={{
-            minHeight: 812,
-          }}
         >
           <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : null}
+            keyboardVerticalOffset={-100}
+            behavior="padding"
             style={styles.container}
           >
             <View style={styles.avatar}>
@@ -96,7 +89,6 @@ const RegistrationScreen = ({ navigation }) => {
                 value={login}
                 onChangeText={(text) => {
                   setLogin(text);
-                  setIsLoginEntered(text.trim() !== "");
                   console.log("Login:", text);
                 }}
                 onFocus={() => setFocusedInput("login")}
@@ -113,10 +105,8 @@ const RegistrationScreen = ({ navigation }) => {
                 placeholder="Адреса електронної пошти"
                 name="email"
                 value={email}
-                editable={isLoginEntered}
                 onChangeText={(text) => {
                   setEmail(text);
-                  setIsEmailEntered(text.trim() !== "");
                   console.log("Email:", text);
                 }}
                 onFocus={() => setFocusedInput("email")}
@@ -134,10 +124,8 @@ const RegistrationScreen = ({ navigation }) => {
                 name="password"
                 value={password}
                 secureTextEntry={!showPassword}
-                editable={isEmailEntered}
                 onChangeText={(text) => {
                   setPassword(text);
-                  setIsPasswordEntered(text !== "");
                   console.log("Password:", text);
                 }}
                 onFocus={() => setFocusedInput("password")}
